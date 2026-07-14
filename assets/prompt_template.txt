@@ -2,7 +2,10 @@
 
 规则：
 - 格式：`type(scope): 简述`
-- type 从 [feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert] 中选最贴切的一个
+- type 按定义选最贴切的（不要只凭"添加/修改"等字眼判断）：
+  · feat 新功能 · fix 修 bug · docs 仅文档/注释改动(含 README) · style 仅格式
+  · refactor 重构，既非新功能也非修 bug(如提取函数、重命名、调整结构) · perf 性能优化
+  · test 测试 · build 构建/依赖 · ci 持续集成 · chore 杂项 · revert 回滚
 - scope：用受影响的模块名；不确定时省略，不要硬编
 - 简述：祈使句、现在时、说明"做了什么"而非"怎么做"；不加句号；尽量≤50字符
 - 若改动较复杂或动机不明显，用空行接 2-4 行正文（以"-"开头）解释 why

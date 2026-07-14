@@ -18,9 +18,17 @@ EVALS = Path(__file__).resolve().parent.parent / "evals" / "evals.json"
 
 
 def main() -> int:
+    import argparse
+    ap = argparse.ArgumentParser(description="运行 evals/evals.json，校验生成的 commit type/scope")
+    ap.add_argument("--endpoint", default=None,
+                    help="覆盖 evals.json 端点，例如 Ollama: http://localhost:11434/v1/chat/completions")
+    ap.add_argument("--model", default=None,
+                    help="覆盖 evals.json 模型名，例如 Ollama: qwen2.5-coder:3b")
+    args = ap.parse_args()
+
     data = json.loads(EVALS.read_text(encoding="utf-8"))
-    endpoint = data.get("endpoint", gc.DEFAULT_ENDPOINT)
-    model = data.get("model", gc.DEFAULT_MODEL)
+    endpoint = args.endpoint or data.get("endpoint", gc.DEFAULT_ENDPOINT)
+    model = args.model or data.get("model", gc.DEFAULT_MODEL)
     cases = data["cases"]
 
     # health_check 内部会把 /v1/chat/completions 转成 /v1/models

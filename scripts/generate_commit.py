@@ -98,8 +98,12 @@ def call_local_model(diff_text: str, *, endpoint: str = DEFAULT_ENDPOINT,
 
 def parse_message(raw: str) -> dict:
     """从模型输出中解析 type/scope/header，做 Conventional Commits 兜底。"""
-    lines = [ln.strip() for ln in raw.strip().splitlines() if ln.strip()]
-    header = lines[0] if lines else raw.strip()
+    text = raw.strip()
+    # 剥离模型有时包裹的 markdown 代码块围栏（```commit / ```markdown / ```）
+    text = re.sub(r"^\s*```[^\n]*\n", "", text)
+    text = re.sub(r"\n```\s*$", "", text)
+    lines = [ln.strip() for ln in text.strip().splitlines() if ln.strip()]
+    header = lines[0] if lines else text.strip()
     body = "\n".join(lines[1:]) if len(lines) > 1 else ""
 
     m = COMMIT_HEADER_RE.match(header)
