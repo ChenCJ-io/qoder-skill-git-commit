@@ -1,0 +1,35 @@
+{
+  "model": "Qwen/Qwen2.5-Coder-3B-Instruct",
+  "endpoint": "http://localhost:8000/v1/chat/completions",
+  "notes": "每个 case 给定一段 diff 与期望的 type/scope，run_eval.py 校验生成结果。",
+  "cases": [
+    {
+      "name": "add-export-endpoint",
+      "description": "新增一个导出图片的接口",
+      "diff": "diff --git a/api.py b/api.py\n@@ -10,6 +10,13 @@ def get_image(image_id):\n+@app.post(\"/export\")\n+def export_image(req: ExportReq):\n+    \"\"\"导出当前画布为 PNG\"\"\"\n+    path = render_service.export(req.image_id)\n+    return {\"url\": path}",
+      "expect_type": "feat",
+      "expect_scope": "api"
+    },
+    {
+      "name": "fix-token-reset",
+      "description": "修复 token 过期未清空的 bug",
+      "diff": "diff --git a/auth.py b/auth.py\n@@ -42,7 +42,10 @@ def finalize(run_id):\n-    # token 在此处未重置\n-    return\n+    state = load_state(run_id)\n+    if state.token_expired:\n+        state.token = None\n+        save_state(state)",
+      "expect_type": "fix",
+      "expect_scope": "auth"
+    },
+    {
+      "name": "refactor-extract-function",
+      "description": "提取重复逻辑为公共函数，不改行为",
+      "diff": "diff --git a/service.py b/service.py\n@@ -20,12 +20,7 @@ def process_a(x):\n-    total = 0\n-    for i in x:\n-        total += i * 2\n-    return total\n+    return _double_sum(x)\n+\n+def _double_sum(items):\n+    return sum(i * 2 for i in items)",
+      "expect_type": "refactor",
+      "expect_scope": null
+    },
+    {
+      "name": "docs-readme",
+      "description": "更新 README 说明",
+      "diff": "diff --git a/README.md b/README.md\n@@ -1,3 +1,5 @@\n # 项目说明\n+\n+## 安装\n+运行 `pip install -r requirements.txt` 后启动 server.py。",
+      "expect_type": "docs",
+      "expect_scope": null
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+
+# 日志
+*.log
+
+# 本地模型缓存与 OpenVINO IR（体积大，不入库；用脚本按需下载/转换）
+models/
+*.bin
+*.safetensors
+*.onnx
+openvino_ir/
+
+# 系统
+.DS_Store
